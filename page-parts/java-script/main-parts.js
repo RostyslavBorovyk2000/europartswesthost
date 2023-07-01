@@ -53,7 +53,9 @@ const showCardsByCategory = categoryQueryParam => {
     block.classList.remove("hidden");
 
     axios
-      .get(`http://127.0.0.1:8000/api/categories/${categoryQueryParam}`)
+      .get(
+        `http://api.europartswest.com.ua/public/api/categories/${categoryQueryParam}`
+      )
       .then(({ data }) => {
         if (categoryQueryParam == data.id) {
           categoriesContainer.innerHTML = "";
