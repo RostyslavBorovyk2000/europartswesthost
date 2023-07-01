@@ -72,5 +72,4 @@ const request = () => {
     block.classList.add("hidden");
   }
 };
-console.log(category);
 export default request;
