@@ -18,7 +18,9 @@ const request = () => {
       mainContainer.classList.add("hidden");
       block.classList.remove("hidden");
       axios
-        .get(`http://127.0.0.1:8000/api/categories/${categoryQueryParam}`)
+        .get(
+          `http://api.europartswest.com.ua/public/api/categories/${categoryQueryParam}`
+        )
         .then(({ data }) => {
           console.log(data);
           if (categoryQueryParam == data.id) {
@@ -43,7 +45,9 @@ const request = () => {
     block.classList.remove("hidden");
 
     axios
-      .get(`http://127.0.0.1:8000/api/categories/${categoryQueryParam}`)
+      .get(
+        `http://api.europartswest.com.ua/public/api/categories/${categoryQueryParam}`
+      )
       .then(({ data }) => {
         console.log(data);
         if (categoryQueryParam == data.id) {
