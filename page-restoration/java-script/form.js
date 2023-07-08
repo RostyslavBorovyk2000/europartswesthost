@@ -81,7 +81,10 @@ const forms = () => {
       message: `Імя ${imputName.value} Телефон ${phoneNumberInput.value} ${inputText.value}`,
     };
     console.log(requestData);
-    axios.post("http://127.0.0.1:8000/api/send-email", requestData);
+    axios.post(
+      "http://api.europartswest.com.ua/public/api/send-email",
+      requestData
+    );
 
     form.style.display = "none";
     sendAccept.style.display = "flex";

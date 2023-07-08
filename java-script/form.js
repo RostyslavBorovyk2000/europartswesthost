@@ -26,7 +26,29 @@ const forms = () => {
     phoneNumberInput.addEventListener("input", updateButtonColor);
 
     function updateButtonColor() {
-      if (imputName.value.length > 0 && phoneNumberInput.value.length > 0) {
+      if (imputName.value.length > 0 && phoneNumberInput.value.length > 9) {
+        send.style.background = "#C00000";
+      } else {
+        send.style.background = "";
+      }
+    }
+  });
+
+  btnWidht.addEventListener("click", () => {
+    phoneNumberInput.value = "";
+    imputName.value = "";
+    inputText.value = "";
+    imputName.style.borderColor = "grey";
+    phoneNumberInput.style.borderColor = "grey";
+    inputText.style.borderColor = "grey";
+    form.style.display = "flex";
+    overflo.style.display = "block";
+
+    imputName.addEventListener("input", updateButtonColor);
+    phoneNumberInput.addEventListener("input", updateButtonColor);
+
+    function updateButtonColor() {
+      if (imputName.value.length > 0 && phoneNumberInput.value.length > 9) {
         send.style.background = "#C00000";
       } else {
         send.style.background = "";
@@ -41,6 +63,7 @@ const forms = () => {
       enteredNumber != expectedNumber ||
       isNaN(enteredNumber) ||
       phoneNumberInput === "" ||
+      phoneNumberInput.value.length > 9 ||
       imputName === "" ||
       inputText === ""
     ) {
@@ -49,14 +72,16 @@ const forms = () => {
       inputText.style.borderColor = "red";
       return;
     }
-
     const requestData = {
-      to_email: "rostykfox911@gmail.com",
+      to_email: "europartswest1@gmail.com",
       subject: "rostykfox911@gmail.com",
       message: `Імя ${imputName.value} Телефон ${phoneNumberInput.value} ${inputText.value}`,
     };
     console.log(requestData);
-    axios.post("http://127.0.0.1:8000/api/send-email", requestData);
+    axios.post(
+      "http://api.europartswest.com.ua/public/api/send-email",
+      requestData
+    );
 
     form.style.display = "none";
     sendAccept.style.display = "flex";
