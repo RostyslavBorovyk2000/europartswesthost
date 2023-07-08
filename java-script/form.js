@@ -51,7 +51,7 @@ const forms = () => {
     }
 
     const requestData = {
-      to_email: "europartswest1@gmail.com",
+      to_email: "rostykfox911@gmail.com",
       subject: "rostykfox911@gmail.com",
       message: `Імя ${imputName.value} Телефон ${phoneNumberInput.value} ${inputText.value}`,
     };
