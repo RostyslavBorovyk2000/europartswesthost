@@ -27,7 +27,7 @@ const forms = () => {
     phoneNumberInput.addEventListener("input", updateButtonColor);
 
     function updateButtonColor() {
-      if (imputName.value.length > 0 && phoneNumberInput.value.length > 9) {
+      if (imputName.value.length > 0 && phoneNumberInput.value.length > 0) {
         send.style.background = "#C00000";
       } else {
         send.style.background = "";
@@ -49,7 +49,7 @@ const forms = () => {
     phoneNumberInput.addEventListener("input", updateButtonColor);
 
     function updateButtonColor() {
-      if (imputName.value.length > 0 && phoneNumberInput.value.length > 9) {
+      if (imputName.value.length > 0 && phoneNumberInput.value.length > 0) {
         send.style.background = "#C00000";
       } else {
         send.style.background = "";
@@ -64,7 +64,6 @@ const forms = () => {
       enteredNumber != expectedNumber ||
       isNaN(enteredNumber) ||
       phoneNumberInput === "" ||
-      phoneNumberInput.value.length > 9 ||
       imputName === "" ||
       inputText === ""
     ) {

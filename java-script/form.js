@@ -26,29 +26,7 @@ const forms = () => {
     phoneNumberInput.addEventListener("input", updateButtonColor);
 
     function updateButtonColor() {
-      if (imputName.value.length > 0 && phoneNumberInput.value.length > 9) {
-        send.style.background = "#C00000";
-      } else {
-        send.style.background = "";
-      }
-    }
-  });
-
-  btnWidht.addEventListener("click", () => {
-    phoneNumberInput.value = "";
-    imputName.value = "";
-    inputText.value = "";
-    imputName.style.borderColor = "grey";
-    phoneNumberInput.style.borderColor = "grey";
-    inputText.style.borderColor = "grey";
-    form.style.display = "flex";
-    overflo.style.display = "block";
-
-    imputName.addEventListener("input", updateButtonColor);
-    phoneNumberInput.addEventListener("input", updateButtonColor);
-
-    function updateButtonColor() {
-      if (imputName.value.length > 0 && phoneNumberInput.value.length > 9) {
+      if (imputName.value.length > 0 && phoneNumberInput.value.length > 0) {
         send.style.background = "#C00000";
       } else {
         send.style.background = "";
@@ -63,7 +41,6 @@ const forms = () => {
       enteredNumber != expectedNumber ||
       isNaN(enteredNumber) ||
       phoneNumberInput === "" ||
-      phoneNumberInput.value.length > 9 ||
       imputName === "" ||
       inputText === ""
     ) {
@@ -72,6 +49,7 @@ const forms = () => {
       inputText.style.borderColor = "red";
       return;
     }
+
     const requestData = {
       to_email: "europartswest1@gmail.com",
       subject: "rostykfox911@gmail.com",
