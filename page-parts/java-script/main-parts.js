@@ -54,7 +54,7 @@ const showCardsByCategory = categoryQueryParam => {
 
     axios
       .get(
-        `http://api.europartswest.com.ua/public/api/categories/${categoryQueryParam}`
+        `/catalog.php?id=${encodeURIComponent(categoryQueryParam)}`
       )
       .then(({ data }) => {
         if (categoryQueryParam == data.id) {

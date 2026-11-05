@@ -40,7 +40,7 @@ class Slider {
         "        \n" +
         '        <p class="js_service_text-two">Після огляду бригада зразу ж розпочає ремонт, щоб максимально ефективно вирішити проблему і скоротити Ваш час.</p>\n' +
         "        \n" +
-        '           <a class="js-service_block-btn" href="./page-restoration/restoration.html">Детальніше про сервіс</a>'
+        '           <a class="js-service_block-btn" href="./page-sirvice/service.html">Детальніше про сервіс</a>'
     );
 
     this.clickSlider();

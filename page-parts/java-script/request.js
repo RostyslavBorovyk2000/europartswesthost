@@ -19,7 +19,7 @@ const request = () => {
       block.classList.remove("hidden");
       axios
         .get(
-          `http://api.europartswest.com.ua/public/api/categories/${categoryQueryParam}`
+          `/catalog.php?id=${encodeURIComponent(categoryQueryParam)}`
         )
         .then(({ data }) => {
           console.log(data);
@@ -46,7 +46,7 @@ const request = () => {
 
     axios
       .get(
-        `http://api.europartswest.com.ua/public/api/categories/${categoryQueryParam}`
+        `/catalog.php?id=${encodeURIComponent(categoryQueryParam)}`
       )
       .then(({ data }) => {
         console.log(data);
