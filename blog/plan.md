@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- | --- |
 | 1 | Як підготувати телескопічний навантажувач до зими: 7 пунктів | Manitou, JCB | підготовка навантажувача до зими | to, fuel, engine, hydraulic, service | опубліковано 2026-11-07 → blog/pidgotovka-navantazhuvacha-do-zymy.html |
 | 2 | Чому Manitou не заводиться в мороз і що робити? | Manitou | manitou не заводиться, свічки накалу | engine, fuel, electric, service | опубліковано 2026-11-07 → blog/manitou-ne-zavodytsia-v-moroz.html |
-| 3 | Які фільтри міняти на JCB 531-70 і 535-95 і як часто? | JCB | фільтри jcb 535-95, ТО jcb loadall | to, engine, hydraulic | чекає |
+| 3 | Які фільтри міняти на JCB 531-70 і 535-95 і як часто? | JCB | фільтри jcb 535-95, ТО jcb loadall | to, engine, hydraulic | опубліковано 2026-11-07 → blog/filtry-jcb-531-70-535-95.html |
 | 4 | Чому стріла телескопічного навантажувача опускається сама? | Manitou, JCB | стріла опускається, тече гідроциліндр | hydraulic, boom, restoration | чекає |
 | 5 | Чому КПП Manitou не перемикає передачі або смикається? | Manitou | кпп manitou ремонт, не їде вперед | kpp, service | чекає |
 | 6 | Що вигідніше: ремонт гідроциліндра чи новий? | Manitou, JCB | ремонт гідроциліндра навантажувача | restoration, hydraulic | чекає |
