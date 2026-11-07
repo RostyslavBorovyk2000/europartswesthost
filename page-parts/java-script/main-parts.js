@@ -1,6 +1,6 @@
 // Каталог: список категорій або товари категорії (?categories=N). Дані — /catalog.php.
 // Попап заявки і кнопки «Замовити» обробляє java-script/site.js → lead-form.js.
-import Card from "./Card-parts.js?v=20261107d";
+import Card from "./Card-parts.js?v=20261107e";
 
 const catsView = document.querySelector(".js-cats");
 const listView = document.querySelector(".block");
@@ -52,7 +52,7 @@ const showCategory = async (id) => {
     countEl.textContent = `${products.length} ${plural(products.length)}`;
     if (!products.length) container.innerHTML = `<p class="empty">У цій категорії поки порожньо. Зателефонуйте — підберемо під замовлення.</p>`;
   } catch (e) {
-    container.innerHTML = `<p class="empty">Не вдалося завантажити каталог. Зателефонуйте нам: <a href="tel:+380672808384">+380 (67) 280 83 84</a></p>`;
+    container.innerHTML = `<p class="empty">Не вдалося завантажити каталог. Зателефонуйте: <a href="tel:+380672808384">Юрій +380 (67) 280 83 84</a> або <a href="tel:+380983982533">Олександр +380 (98) 398 25 33</a></p>`;
     countEl.textContent = "";
   }
 };

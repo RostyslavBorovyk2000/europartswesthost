@@ -1,5 +1,5 @@
 // Спільне для всіх сторінок: перемикач Manitou/JCB, попап заявки, форма заявки на сторінці (#lead-inline).
-import { initLeadForm, postLead } from "./lead-form.js?v=20261107d";
+import { initLeadForm, postLead } from "./lead-form.js?v=20261107e";
 
 // Попап заявки (кнопка «Залишити заявку» в шапці)
 initLeadForm([".js-open-lead"]);
@@ -22,6 +22,16 @@ try {
   const saved = localStorage.getItem("ep-brand");
   if (saved === "jcb") setBrand("jcb", false);
 } catch (e) {}
+
+// ---- Вибір, кому дзвонити: закривати при кліку поза меню і відкривати лише одне ----
+document.addEventListener("click", (e) => {
+  document.querySelectorAll("details.callpick[open]").forEach((d) => {
+    if (!d.contains(e.target)) d.removeAttribute("open");
+  });
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") document.querySelectorAll("details.callpick[open]").forEach((d) => d.removeAttribute("open"));
+});
 
 // ---- Форма заявки на сторінці ----
 const form = document.getElementById("lead-inline");
@@ -69,7 +79,7 @@ if (form) {
       if (accept) accept.style.display = "flex";
       if (overflo) overflo.style.display = "block";
     } catch (e2) {
-      showErr("Не вдалося надіслати заявку. Зателефонуйте нам: +380 (67) 280 83 84");
+      showErr("Не вдалося надіслати заявку. Зателефонуйте: Юрій +380 (67) 280 83 84 або Олександр +380 (98) 398 25 33");
     } finally {
       sending = false;
       btn.style.opacity = "";
