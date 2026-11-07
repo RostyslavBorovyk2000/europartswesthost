@@ -4,8 +4,13 @@ index.html правиться вручну. Статті блогу — blog/pos
 import sys, os, re, json, glob, datetime, html as H
 ROOT=sys.argv[1] if len(sys.argv)>1 else "."
 V="20261107i"
-SITE="https://europartswest.com.ua"
+SITE="https://www.europartswest.com.ua"  # так сайт проіндексований у Google
 MAP="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d162.26824443719536!2d26.967763160480818!3d49.40338512278056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4732067d411f8ff3%3A0x9b2695110350dd7b!2sAvtozapchastyny%2C%20Mah.!5e0!3m2!1sru!2sua!4v1686254268805!5m2!1sru!2sua"
+
+def seo(desc, path):
+    return f'''
+    <meta name="description" content="{desc}" />
+    <link rel="canonical" href="{SITE}{path}" />'''
 
 def head(title, extra_js="", meta=""):
     return f'''<!DOCTYPE html>
@@ -190,7 +195,7 @@ def steps(items, cls="grid4"):
 # ---------- КАТАЛОГ ----------
 cats=[(5,"Двигун"),(6,"КПП"),(7,"Кутовий редуктор"),(8,"Мости"),(9,"Стріла"),(10,"Електросистема"),(11,"Паливна система"),(12,"Гідравлічна система"),(13,"Запчастини для ТО"),(14,"Інші запчастини")]
 cat_html="\n".join(f'          <a class="catx item_categoriys rv" data-id="{i}" href="?categories={i}"><small>{n_:02d}</small><b>{t}</b><span class="go" aria-hidden="true">→</span></a>' for n_,(i,t) in enumerate(cats,1))
-parts=head("Каталог запчастин — Євро Партс Захід",f'\n    <script type="module" src="./java-script/main-parts.js?v={V}"></script>')+header("parts")+"<main>"+phero(
+parts=head("Запчастини Маніту та JCB — каталог | Євро Партс Захід",meta=seo("Запчастини Маніту (Manitou) та JCB для телескопічних навантажувачів у наявності: двигун, КПП, мости, гідравліка, ТО. Хмельницький, доставка по Україні.","/page-parts/parts.html"),extra_js=f'\n    <script type="module" src="./java-script/main-parts.js?v={V}"></script>')+header("parts")+"<main>"+phero(
  "page-parts.jpg","Каталог",words("Запчастини Маніту та JCB","Маніту"),
  "Наші кваліфіковані менеджери завжди готові порадити та допомогти клієнтам у виборі необхідних запчастин.",
  BTN_LEAD.format("Дізнатися ціну та наявність")+CALL,"Ківш телескопічного навантажувача Manitou")+f'''
@@ -229,8 +234,8 @@ parts=head("Каталог запчастин — Євро Партс Захід
 svc=[("Motor.svg","Ремонт моторів"),("KPP.svg","Ремонт КПП"),("Angle reducer.svg","Ремонт кутових редукторів"),("hydraulics.svg","Ремонт гідравлічних систем"),("Diagnostics.svg","Діагностика"),("Fuel system.svg","Ремонт паливних систем"),("axel.svg","Ремонт мостів")]
 tiles="\n".join(f'          <div class="tile rv"><span class="ico"><img src="./img-service/{f.replace(" ","%20")}" alt="" /></span><h3>{t}</h3></div>' for f,t in svc)
 tiles+='\n          <button type="button" class="tile rv js-open-lead" style="font-family:inherit;text-align:left;cursor:pointer;color:var(--on);background:var(--r);border-color:var(--r)"><span class="ico" style="background:rgba(255,255,255,.18);color:var(--on);font-size:28px;font-weight:800">→</span><h3>Запис на ремонт</h3></button>'
-service=head("Сервіс Маніту — Євро Партс Захід")+header("service")+"<main>"+phero(
- "page-service.jpg","Сервіс",words("Сервіс Маніту на вашій локації","Маніту"),
+service=head("Сервіс Маніту та JCB — виїзний ремонт навантажувачів | Євро Партс Захід",meta=seo("Сервіс Маніту та JCB: бригада з двох інженерів приїжджає з запчастинами й ремонтує телескопічний навантажувач на місці. Двигун, КПП, гідравліка, мости, діагностика.","/page-sirvice/service.html"))+header("service")+"<main>"+phero(
+ "page-service.jpg","Сервіс",words("Сервіс Маніту та JCB на вашій локації","Маніту"),
  "Наші бригади складаються з двох висококваліфікованих інженерів, які швидко та ефективно вирішують будь-які проблеми на місці у клієнта.",
  BTN_LEAD.format("Запис на ремонт")+CALL,"Телескопічний навантажувач Manitou працює в ангарі")+f'''
       <section class="wrap sec">
@@ -276,7 +281,7 @@ service=head("Сервіс Маніту — Євро Партс Захід")+hea
 # ---------- РЕСТАВРАЦІЯ ----------
 rs=[("restoration-cylinder.svg","Циліндри","Гідроциліндри стріли, ковша, нахилу"),("restoration-axel.svg","Мости","Чулки мостів"),("restoration-hose.svg","Шланги","Шланги високого тиску"),("restoration-equipment.svg","Навіска","Навісне обладнання")]
 rtiles="\n".join(f'          <div class="tile rv"><span class="ico"><img src="./restoration-images/{f}" alt="" /></span><h3>{t}</h3><p>{p}</p></div>' for f,t,p in rs)
-restoration=head("Реставрація — Євро Партс Захід")+header("restoration")+"<main>"+phero(
+restoration=head("Реставрація гідроциліндрів і мостів Маніту та JCB | Євро Партс Захід",meta=seo("Реставрація гідроциліндрів, навісного обладнання, шлангів високого тиску та чулків мостів для навантажувачів Маніту і JCB. Дешевше за нову деталь.","/page-restoration/restoration.html"))+header("restoration")+"<main>"+phero(
  "page-restoration.jpg","Реставрація",words("Послуги реставрації","реставрації"),
  "Сервісна бригада надає послуги реставрації зношених або пошкоджених запчастин. Реставрація включає в себе обов’язкові етапи, які гарантують якісний результат.",
  BTN_LEAD.format("Запис на ремонт")+CALL,"Телескопічний навантажувач на фермі")+f'''
@@ -301,7 +306,7 @@ restoration=head("Реставрація — Євро Партс Захід")+he
 '''+ctaband("Потрібна реставрація?","Опишіть деталь — менеджер підкаже вартість і строки.")+"</main>"+footer()
 
 # ---------- КОНТАКТИ ----------
-contact=head("Контакти — Євро Партс Захід")+header("contact")+"<main>"+phero(
+contact=head("Контакти — Євро Партс Захід, сервіс і запчастини Маніту, Хмельницький",meta=seo("Євро Партс Захід: м. Хмельницький, вул. Київська, 4. Юрій +380 (67) 280 83 84, Олександр +380 (98) 398 25 33. Пн–Пт 8–17, Сб 8–15.","/page-contact/contact.html"))+header("contact")+"<main>"+phero(
  "page-contact.jpg","Контакти",words("Наші контакти","контакти"),
  "Хмельницький, вул. Київська, 4. Телефонуйте, пишіть або приїжджайте на офіс-склад.",
  callpick("Зателефонувати","btn cta",up=True)+'<a class="btn btn-ghost" href="#request">Залишити заявку</a>',"Телескопічний навантажувач Manitou на фермі")+f'''
@@ -517,7 +522,6 @@ if "<!-- BLOG:START -->" in home and posts:
 # ---------- sitemap.xml + robots.txt ----------
 urls=[(f"{SITE}/",today),(f"{SITE}/page-parts/parts.html",today),(f"{SITE}/page-sirvice/service.html",today),
       (f"{SITE}/page-restoration/restoration.html",today),(f"{SITE}/page-contact/contact.html",today),(f"{SITE}/blog/",posts[0]["date"] if posts else today)]
-urls+=[(f"{SITE}/page-parts/parts.html?categories={i}",today) for i,_ in cats]
 urls+=[(f"{SITE}/blog/{p['slug']}.html",p["date"]) for p in posts]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"".join(f"  <url><loc>{H.escape(u)}</loc><lastmod>{d.isoformat()}</lastmod></url>\n" for u,d in urls)+"</urlset>\n"
 pages_out["sitemap.xml"]=sm
