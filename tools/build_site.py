@@ -3,7 +3,7 @@
 index.html правиться вручну. Статті блогу — blog/posts/*.md (див. blog/README.md)."""
 import sys, os, re, json, glob, datetime, html as H
 ROOT=sys.argv[1] if len(sys.argv)>1 else "."
-V="20261107e"
+V="20261107g"
 SITE="https://europartswest.com.ua"
 MAP="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d162.26824443719536!2d26.967763160480818!3d49.40338512278056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4732067d411f8ff3%3A0x9b2695110350dd7b!2sAvtozapchastyny%2C%20Mah.!5e0!3m2!1sru!2sua!4v1686254268805!5m2!1sru!2sua"
 
@@ -102,7 +102,7 @@ def ctaband(title, text):
     return f'''
       <section class="wrap" style="padding-top:60px;padding-bottom:100px">
         <div class="ctaband rv">
-          <div class="glow" aria-hidden="true"></div>
+          <div class="glowclip" aria-hidden="true"><div class="glow"></div></div>
           <div>
             <h2>{title}</h2>
             <p>{text}</p>
@@ -171,7 +171,7 @@ def footer():
 '''
 
 BTN_LEAD='<button type="button" class="btn cta shine js-open-lead">{}<span class="gl"></span></button>'
-CALL=callpick()
+CALL=callpick(up=True)
 
 def steps(items, cls="grid4"):
     return f'<div class="{cls}" style="gap:22px">'+"".join(f'<div class="step rv"><b>{i+1:02d}</b><h3>{t}</h3>{f"<p>{p}</p>" if p else ""}</div>' for i,(t,p) in enumerate(items))+'</div>'
@@ -293,7 +293,7 @@ restoration=head("Реставрація — Євро Партс Захід")+he
 contact=head("Контакти — Євро Партс Захід")+header("contact")+"<main>"+phero(
  "page-contact.jpg","Контакти",words("Наші контакти","контакти"),
  "Хмельницький, вул. Київська, 4. Телефонуйте, пишіть або приїжджайте на офіс-склад.",
- callpick("Зателефонувати","btn cta")+'<a class="btn btn-ghost" href="#request">Залишити заявку</a>',"Телескопічний навантажувач Manitou на фермі")+f'''
+ callpick("Зателефонувати","btn cta",up=True)+'<a class="btn btn-ghost" href="#request">Залишити заявку</a>',"Телескопічний навантажувач Manitou на фермі")+f'''
       <section class="wrap sec">
         <div class="cgrid">
           <div class="ccard rv"><small>ТЕЛЕФОНИ</small><a href="tel:+380672808384">+380 (67) 280 83 84</a><span>Менеджер Юрій</span><a href="tel:+380983982533">+380 (98) 398 25 33</a><span>Директор Олександр</span></div>
@@ -345,7 +345,7 @@ p404=head("Сторінку не знайдено — Євро Партс Зах
             <div class="row in d5" style="gap:12px 26px;font-size:15px;color:#cfcac2;align-items:center">
               <span>Шукаєте конкретну деталь?</span>
               <button type="button" class="linkbtn js-open-lead">Залиште заявку →</button>
-              '''+callpick("Подзвонити →","linkbtn")+'''
+              '''+callpick("Подзвонити →","linkbtn",up=True)+'''
             </div>
           </div>
         </div>
@@ -383,10 +383,14 @@ def parse_post(path):
     meta["html"]=html_body
     return meta
 
+def jcb_cover(p):
+    # у темі JCB — жовте фото: власне cover_jcb статті або загальне
+    return f"../images/blog/{p['cover_jcb']}" if p.get("cover_jcb") else "../images/home/hero-jcb.jpg"
+
 def post_card(p, prefix=""):
     tags="".join(f'<span class="tag">{H.escape(t)}</span>' for t in p["tags"])
     return f'''<a class="pcard rv" href="{prefix}{p["slug"]}.html">
-            <span class="pcard-img"><img src="../images/blog/{p["cover"]}" alt="" loading="lazy" /></span>
+            <span class="pcard-img"><img class="man" src="../images/blog/{p["cover"]}" alt="" loading="lazy" /><img class="jcb" src="{jcb_cover(p)}" alt="" loading="lazy" /></span>
             <span class="pcard-body"><span class="pmeta">{udate(p["date"])}{tags}</span><b>{H.escape(p["title"])}</b><span class="pdesc">{H.escape(p["description"])}</span><span class="pmore">Читати <span class="arrow">→</span></span></span>
           </a>'''
 
@@ -424,7 +428,8 @@ for idx,p in enumerate(posts):
     mins=max(2,round(p["words"]/180))
     html_=head(f"{p['title']} — Блог Євро Партс Захід",meta=meta)+header("blog")+f'''<main>
       <section class="ahero">
-        <img class="ahero-img" src="../images/blog/{p["cover"]}" alt="{H.escape(p.get("cover_alt",""))}" />
+        <img class="ahero-img man" src="../images/blog/{p["cover"]}" alt="{H.escape(p.get("cover_alt",""))}" />
+        <img class="ahero-img jcb" src="{jcb_cover(p)}" alt="Телескопічний навантажувач JCB Loadall" loading="lazy" />
         <div class="ahero-shade" aria-hidden="true"></div>
         <div class="wrap ahero-in">
           <div class="crumbs in d1"><a href="../index.html">Головна</a><i>/</i><a href="./index.html">Блог</a></div>

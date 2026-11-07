@@ -43,7 +43,7 @@
 .grid5s{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}
 
 /* Смуга-заклик */
-.ctaband{position:relative;overflow:hidden;background:#141413;border:1px solid #3a2a1d;border-radius:24px;padding:48px 56px;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
+.ctaband{position:relative;background:#141413;border:1px solid #3a2a1d;border-radius:24px;padding:48px 56px;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
 .ctaband h2{position:relative;margin:0;font-size:36px;font-weight:800;letter-spacing:-.015em;max-width:640px}
 .ctaband p{position:relative;margin:10px 0 0;color:#cfcac2;font-size:17px}
 .ctaband .row{position:relative}
@@ -179,3 +179,14 @@
 .chiplink:hover{border-color:var(--r);background:rgba(var(--rgb),.08);transform:translateX(4px);filter:none}
 @media (max-width:1100px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.article{grid-template-columns:minmax(0,1fr)}.aside{position:static}}
 @media (max-width:760px){.pgrid{grid-template-columns:minmax(0,1fr)}.atitle{font-size:34px}.ahero{min-height:440px}.prose-a{font-size:17px}.prose-a h2{font-size:23px}}
+
+.glowclip{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none}
+/* Тема JCB у блозі: жовті фото */
+.pcard-img{position:relative}
+.pcard-img img.jcb,.ahero-img.jcb{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.ahero-img.man{transition:opacity .8s ease}
+:root.th-j .pcard-img img.jcb,:root.th-j .ahero-img.jcb{opacity:1}
+:root.th-j .ahero-img.man{opacity:0}
+.tag{transition:color .8s,border-color .8s}
+:root.th-j .tag{border-color:rgba(255,210,74,.45)}
+@media (max-width:900px){.cgrid{grid-template-columns:minmax(0,1fr)}}
