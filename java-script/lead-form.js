@@ -46,17 +46,17 @@ export function initLeadForm(openSelectors = []) {
   let sending = false;
 
   const errorBox = document.createElement("p");
-  errorBox.style.cssText = "color:#C00000;font-size:14px;margin-top:10px;text-align:center;display:none";
+  errorBox.className = "lead-err";
+  errorBox.setAttribute("role", "alert");
   send.insertAdjacentElement("afterend", errorBox);
 
   const showError = (text) => {
     errorBox.textContent = text;
-    errorBox.style.display = "block";
+    errorBox.classList.add("show");
   };
 
   const updateButtonColor = () => {
-    send.style.background =
-      nameInput.value.trim() && phoneInput.value.trim() ? "#C00000" : "";
+    send.classList.toggle("ready", Boolean(nameInput.value.trim() && phoneInput.value.trim()));
   };
   nameInput.addEventListener("input", updateButtonColor);
   phoneInput.addEventListener("input", updateButtonColor);
@@ -66,12 +66,13 @@ export function initLeadForm(openSelectors = []) {
     phoneInput.value = "";
     nameInput.value = "";
     if (textInput) textInput.value = productName ? `Запчастина: ${productName}` : "";
-    [nameInput, phoneInput, textInput].forEach((el) => el && (el.style.borderColor = "grey"));
-    errorBox.style.display = "none";
-    send.style.background = "";
+    [nameInput, phoneInput, textInput].forEach((el) => el && el.classList.remove("bad"));
+    errorBox.classList.remove("show");
+    send.classList.remove("ready", "sending");
     openedAt = Date.now();
     form.style.display = "flex";
     if (overflo) overflo.style.display = "block";
+    setTimeout(() => nameInput.focus(), 50);
   };
 
   const closeAll = () => {
@@ -97,6 +98,16 @@ export function initLeadForm(openSelectors = []) {
   });
 
   if (closeForm) closeForm.addEventListener("click", closeAll);
+  if (overflo) overflo.addEventListener("click", closeAll);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overflo && overflo.style.display === "block") closeAll();
+  });
+  [nameInput, phoneInput, textInput].forEach((el) =>
+    el && el.addEventListener("keydown", (e) => { if (e.key === "Enter") send.click(); })
+  );
+  send.setAttribute("role", "button");
+  send.setAttribute("tabindex", "0");
+  send.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); send.click(); } });
   if (closeAccept) closeAccept.addEventListener("click", closeAll);
 
   send.addEventListener("click", async () => {
@@ -107,16 +118,16 @@ export function initLeadForm(openSelectors = []) {
     const nameOk = name.length > 1;
     const phoneOk = digits.length >= 9 && digits.length <= 13 && /^[\d\s()+-]+$/.test(phone);
 
-    nameInput.style.borderColor = nameOk ? "grey" : "red";
-    phoneInput.style.borderColor = phoneOk ? "grey" : "red";
+    nameInput.classList.toggle("bad", !nameOk);
+    phoneInput.classList.toggle("bad", !phoneOk);
     if (!nameOk || !phoneOk) {
       showError(!phoneOk ? "Вкажіть, будь ласка, коректний номер телефону" : "Вкажіть, будь ласка, ваше ім’я");
       return;
     }
 
     sending = true;
-    errorBox.style.display = "none";
-    send.style.opacity = "0.6";
+    errorBox.classList.remove("show");
+    send.classList.add("sending");
 
     try {
       await postLead({
@@ -133,7 +144,7 @@ export function initLeadForm(openSelectors = []) {
       showError(`Не вдалося надіслати заявку. Зателефонуйте нам: ${PHONE_FALLBACK}`);
     } finally {
       sending = false;
-      send.style.opacity = "";
+      send.classList.remove("sending");
     }
   });
 }
