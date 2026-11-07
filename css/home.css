@@ -223,8 +223,6 @@ input::placeholder{color:#8d877e}
 /* Адаптив */
 @media (max-width:1000px){.grid3,.grid4,.grid5{grid-template-columns:repeat(2,minmax(0,1fr))}.stripes{display:none}.nav{gap:18px}}
 @media (max-width:760px){
-  .nav{display:none}
-  .phones a+a{display:none}
   .hero{min-height:620px}
   .hero-shade{background:linear-gradient(90deg,rgba(14,14,13,.92) 0%,rgba(14,14,13,.75) 60%,rgba(14,14,13,.45) 100%)}
   .h2{font-size:32px;margin-bottom:28px}
@@ -237,5 +235,4 @@ input::placeholder{color:#8d877e}
   .lead{font-size:17px}
   .req{padding:28px}
   .stat b{font-size:30px}
-  .top-right .btn-red{display:none}
 }

@@ -25,12 +25,12 @@ try {
 
 // ---- Вибір, кому дзвонити: закривати при кліку поза меню і відкривати лише одне ----
 document.addEventListener("click", (e) => {
-  document.querySelectorAll("details.callpick[open]").forEach((d) => {
-    if (!d.contains(e.target)) d.removeAttribute("open");
+  document.querySelectorAll("details.callpick[open], details.mnav[open]").forEach((d) => {
+    if (!d.contains(e.target) || e.target.closest(".mnav-link, .mnav-lead")) d.removeAttribute("open");
   });
 });
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") document.querySelectorAll("details.callpick[open]").forEach((d) => d.removeAttribute("open"));
+  if (e.key === "Escape") document.querySelectorAll("details.callpick[open], details.mnav[open]").forEach((d) => d.removeAttribute("open"));
 });
 
 // ---- Форма заявки на сторінці ----
@@ -86,3 +86,10 @@ if (form) {
     }
   });
 }
+
+// Відкрите одне меню закриває інше
+document.querySelectorAll("details.callpick, details.mnav").forEach((d) =>
+  d.addEventListener("toggle", () => {
+    if (d.open) document.querySelectorAll("details.callpick[open], details.mnav[open]").forEach((o) => o !== d && o.removeAttribute("open"));
+  })
+);

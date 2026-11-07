@@ -3,7 +3,7 @@
 index.html правиться вручну. Статті блогу — blog/posts/*.md (див. blog/README.md)."""
 import sys, os, re, json, glob, datetime, html as H
 ROOT=sys.argv[1] if len(sys.argv)>1 else "."
-V="20261107g"
+V="20261107h"
 SITE="https://europartswest.com.ua"
 MAP="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d162.26824443719536!2d26.967763160480818!3d49.40338512278056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4732067d411f8ff3%3A0x9b2695110350dd7b!2sAvtozapchastyny%2C%20Mah.!5e0!3m2!1sru!2sua!4v1686254268805!5m2!1sru!2sua"
 
@@ -44,6 +44,16 @@ NAV=[("parts","../page-parts/parts.html","Каталог"),("service","../page-s
 def callpick(label="Зателефонувати", cls="btn btn-ghost", up=False):
     return f'''<details class="callpick{' up' if up else ''}"><summary class="{cls}">{label}</summary><div class="callpick-menu" role="menu"><a role="menuitem" href="tel:+380672808384"><b>Юрій</b><span>менеджер · +380 (67) 280 83 84</span></a><a role="menuitem" href="tel:+380983982533"><b>Олександр</b><span>директор · +380 (98) 398 25 33</span></a></div></details>'''
 
+TOPCALL='<details class="callpick cp-top"><summary class="btn btn-red callpick-top" aria-label="Подзвонити"><svg class="cp-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span class="cp-label">Подзвонити</span></summary><div class="callpick-menu" role="menu"><a role="menuitem" href="tel:+380672808384"><b>Юрій</b><span>менеджер · +380 (67) 280 83 84</span></a><a role="menuitem" href="tel:+380983982533"><b>Олександр</b><span>директор · +380 (98) 398 25 33</span></a></div></details>'
+
+def mnav(prefix, active):
+    items=[("index","index.html","Головна"),("parts","page-parts/parts.html","Каталог запчастин"),("service","page-sirvice/service.html","Сервіс і ремонт"),("restoration","page-restoration/restoration.html","Реставрація"),("blog","blog/index.html","Блог"),("contact","page-contact/contact.html","Контакти")]
+    links="".join(f'<a class="mnav-link{' active' if k==active else ''}" href="{prefix}{h}">{t}<span aria-hidden="true">→</span></a>' for k,h,t in items)
+    return ('<details class="mnav"><summary class="mnav-btn" aria-label="Меню"><span></span><span></span><span></span></summary>'
+            f'<div class="mnav-panel"><nav aria-label="Меню сторінок">{links}</nav>'
+            '<button type="button" class="btn btn-red js-open-lead mnav-lead">Залишити заявку</button>'
+            '<div class="mnav-phones"><a href="tel:+380672808384"><b>Юрій</b> +380 (67) 280 83 84</a><a href="tel:+380983982533"><b>Олександр</b> +380 (98) 398 25 33</a></div></div></details>')
+
 def header(active):
     links="\n".join(f'          <a class="navlink{" active" if k==active else ""}" href="{h}"{" aria-current=\"page\"" if k==active else ""}>{t}</a>' for k,h,t in NAV)
     return f'''
@@ -61,7 +71,8 @@ def header(active):
             <a href="tel:+380672808384">+38 (067) 280 83 84</a>
             <a href="tel:+380983982533">+38 (098) 398 25 33</a>
           </div>
-          {callpick("Подзвонити","btn btn-red callpick-top")}
+          {TOPCALL}
+          {mnav('../',active)}
           <button type="button" class="btn btn-red shine js-open-lead">Залишити заявку<span class="gl"></span></button>
         </div>
       </div>

@@ -125,12 +125,44 @@
 .callpick-full>summary{display:block;text-align:center}
 .callpick-full .callpick-menu{left:0;right:0;min-width:0}
 .linkbtn::after{display:none}
-@media (max-width:760px){
-  .top .phones{display:none}
-  .top .callpick-top{display:inline-block}
-  .top .callpick-top>summary{padding:10px 14px}
-  .top-right .callpick-menu{left:0;right:auto;min-width:min(290px,calc(100vw - 48px))}
+/* Шапка на телефоні: логотип + трубка + меню (☰). Меню прив'язані до шапки — не вилазять за екран */
+.mnav{display:none}
+.cp-ico{display:none}
+@media (max-width:900px){
+  .top-in{flex-wrap:nowrap;position:static}
+  .top{position:sticky}
+  .nav,.top .phones{display:none}
+  .brand{font-size:13px;letter-spacing:.05em;gap:10px;min-width:0}
+  .top-right{gap:10px;flex-wrap:nowrap;margin-left:auto}
+  .top-right>.btn-red.js-open-lead{display:none}
+  .top .cp-top,.top .mnav{position:static}
+  .top .callpick-top{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;padding:0;border-radius:12px}
+  .top .callpick-top::after{display:none}
+  .top .cp-label{display:none}
+  .top .cp-ico{display:block}
+  .top .callpick-menu{left:12px;right:12px;top:calc(100% + 6px);min-width:0}
+  .mnav{display:block}
+  .mnav>summary{list-style:none}
+  .mnav>summary::-webkit-details-marker{display:none}
+  .mnav-btn{width:46px;height:46px;border-radius:12px;border:1px solid #3a3835;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;background:rgba(255,255,255,.03)}
+  .mnav-btn span{display:block;width:20px;height:2px;border-radius:2px;background:#F2EFEA;transition:transform .3s,opacity .3s}
+  .mnav[open] .mnav-btn{border-color:var(--g)}
+  .mnav[open] .mnav-btn span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .mnav[open] .mnav-btn span:nth-child(2){opacity:0}
+  .mnav[open] .mnav-btn span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:70;background:#121211;border-bottom:1px solid #2a2a28;box-shadow:0 30px 60px rgba(0,0,0,.6);padding:10px 20px 22px;max-height:calc(100vh - 70px);overflow:auto;animation:fade .25s ease both}
+  .mnav-panel nav{display:flex;flex-direction:column}
+  .mnav-link{display:flex;justify-content:space-between;align-items:center;padding:16px 4px;border-bottom:1px solid #222220;color:#F2EFEA;text-decoration:none;font-size:18px;font-weight:700}
+  .mnav-link span{color:var(--g);transition:transform .25s}
+  .mnav-link:hover span{transform:translateX(4px)}
+  .mnav-link.active{color:var(--g)}
+  .mnav-lead{width:100%;margin-top:18px;padding:15px;font-size:16px}
+  .mnav-phones{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+  .mnav-phones a{color:#cfcac2;text-decoration:none;font-size:15px}
+  .mnav-phones b{color:#F2EFEA;margin-right:6px}
 }
+@media (max-width:360px){.brand{font-size:11px}.brand img{width:44px}}
+html,body{overflow-x:clip}
 
 /* Блог: картки статей */
 .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
