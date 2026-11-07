@@ -5,6 +5,30 @@
 const PHONE_FALLBACK = "+380 (67) 280 83 84";
 const ADS_CONVERSION = "AW-16474244921/LJ50CIX51JYZELmOxK89";
 
+// Відправка заявки на /send.php. Конверсія Google Ads — тільки після успішної відправки.
+// Використовується попапом нижче і формою на новій головній (java-script/home.js).
+export async function postLead({ name, phone, message = "", product = "", elapsed = 0 }) {
+  const res = await fetch("/send.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      phone,
+      message,
+      product,
+      page: document.title + " — " + location.pathname,
+      elapsed,
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) throw new Error(data.error || "send_failed");
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "conversion", { send_to: ADS_CONVERSION });
+  }
+  return data;
+}
+
 export function initLeadForm(openSelectors = []) {
   const form = document.querySelector(".sign-up");
   const closeForm = document.querySelector(".close-img");
@@ -95,24 +119,13 @@ export function initLeadForm(openSelectors = []) {
     send.style.opacity = "0.6";
 
     try {
-      const res = await fetch("/send.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          phone,
-          message: textInput ? textInput.value.trim() : "",
-          product,
-          page: document.title + " — " + location.pathname,
-          elapsed: Date.now() - openedAt,
-        }),
+      await postLead({
+        name,
+        phone,
+        message: textInput ? textInput.value.trim() : "",
+        product,
+        elapsed: Date.now() - openedAt,
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error(data.error || "send_failed");
-
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "conversion", { send_to: ADS_CONVERSION });
-      }
       form.style.display = "none";
       if (sendAccept) sendAccept.style.display = "flex";
       if (overflo) overflo.style.display = "block";
