@@ -1,0 +1,6 @@
+# Блог оновлюється щотижня: браузер щоразу перевіряє свіжість HTML (304, якщо без змін)
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
