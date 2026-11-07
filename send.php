@@ -5,7 +5,7 @@
  *   1) Telegram — якщо є файл налаштувань поза public_html: /home/<user>/europarts-config.php
  *        <?php return ['tg_token' => 'ТОКЕН_БОТА', 'tg_chats' => ['CHAT_ID_1', 'CHAT_ID_2']];
  *      (токен у репозиторій не кладемо — репозиторій публічний)
- *   2) Пошта europartswest1@gmail.com — через наявний API, а якщо він недоступний — через mail().
+ *   2) Пошта europartswest1@gmail.com — через mail() хостингу (від site@europartswest.com.ua), запасний — API.
  *   3) Завжди дописується в журнал поза public_html: /home/<user>/europarts-leads.log
  *      — щоб жодна заявка не загубилась, навіть якщо пошта і Telegram не спрацювали.
  */
@@ -104,19 +104,26 @@ if (is_file($cfgFile)) {
     }
 }
 
-// 2) Пошта через наявний API (сервер-сервер), запасний варіант — mail()
-$mailed = post_json('http://api.europartswest.com.ua/public/api/send-email', [
-    'to_email' => 'europartswest1@gmail.com',
-    'subject'  => 'Заявка з сайту: ' . $name . ', ' . $phone,
-    'message'  => $text,
-]);
+// 2) Пошта: напряму через пошту хостингу від site@europartswest.com.ua (SPF/DKIM домену).
+//    API api.europartswest.com.ua — лише запасний варіант: він шле від hello@example.com, і Gmail такі листи відкидає.
+$subjectText = 'Заявка з сайту: ' . $name . ', ' . $phone;
+$mailed = @mail(
+    'europartswest1@gmail.com',
+    '=?UTF-8?B?' . base64_encode($subjectText) . '?=',
+    $text,
+    "MIME-Version: 1.0\r\n"
+    . "Content-Type: text/plain; charset=UTF-8\r\n"
+    . "Content-Transfer-Encoding: 8bit\r\n"
+    . "From: =?UTF-8?B?" . base64_encode('Сайт Євро Партс Захід') . "?= <site@europartswest.com.ua>\r\n"
+    . "Reply-To: site@europartswest.com.ua",
+    '-fsite@europartswest.com.ua'
+);
 if (!$mailed) {
-    $mailed = @mail(
-        'europartswest1@gmail.com',
-        '=?UTF-8?B?' . base64_encode('Заявка з сайту: ' . $name) . '?=',
-        $text,
-        "Content-Type: text/plain; charset=UTF-8\r\nFrom: site@europartswest.com.ua"
-    );
+    $mailed = post_json('http://api.europartswest.com.ua/public/api/send-email', [
+        'to_email' => 'europartswest1@gmail.com',
+        'subject'  => $subjectText,
+        'message'  => $text,
+    ]);
 }
 if ($mailed) $delivered = true;
 
