@@ -179,7 +179,7 @@ input::placeholder{color:#8d877e}
 /* Попап заявки (логіка — java-script/lead-form.js) */
 #overflo{display:none;position:fixed;inset:0;z-index:90;background:rgba(6,6,5,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .3s ease both;cursor:pointer}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.sign-up,.accept-sign-up{display:none;position:fixed;z-index:100;left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,92vw);max-height:92vh;overflow:auto;flex-direction:column;background:#151514;border:1px solid #2e2e2b;border-radius:22px;padding:34px 30px 30px;box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.03);animation:popin .45s cubic-bezier(.2,.8,.2,1) both;isolation:isolate}
+.sign-up,.accept-sign-up{display:none;position:fixed;z-index:100;left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,92vw);max-height:92vh;overflow-x:hidden;overflow-y:auto;flex-direction:column;background:#151514;border:1px solid #2e2e2b;border-radius:22px;padding:34px 30px 30px;box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.03);animation:popin .45s cubic-bezier(.2,.8,.2,1) both;isolation:isolate}
 @keyframes popin{from{opacity:0;transform:translate(-50%,-46%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 .sign-up::before,.accept-sign-up::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--r),var(--g),var(--r));background-size:200% 100%;animation:bar 4s linear infinite}
 @keyframes bar{to{background-position:-200% 0}}
