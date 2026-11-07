@@ -134,3 +134,12 @@ document.querySelectorAll("[data-carousel]").forEach((car) => {
   window.addEventListener("resize", buildDots);
   buildDots();
 });
+
+// Сторінка товару: копіювання артикулу
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest(".pd-copy");
+  if (!b) return;
+  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Скопійовано ✓"; }
+  catch { b.textContent = b.dataset.copy; }
+  setTimeout(() => (b.textContent = "Копіювати"), 1800);
+});

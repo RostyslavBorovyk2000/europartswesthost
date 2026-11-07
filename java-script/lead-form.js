@@ -91,6 +91,7 @@ export function initLeadForm(openSelectors = []) {
   document.addEventListener("click", (e) => {
     const btn = e.target.closest(".product-btn");
     if (!btn) return;
+    if (btn.dataset.product) return open(btn.dataset.product);
     const card = btn.closest(".product");
     const title = card?.querySelector(".product-title")?.textContent.trim() || "";
     const article = card?.querySelector(".product-price")?.textContent.trim() || "";

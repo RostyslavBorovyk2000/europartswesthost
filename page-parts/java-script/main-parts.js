@@ -48,7 +48,7 @@ const showCategory = async (id) => {
     if (!res.ok || String(data.id) !== String(id)) throw new Error("bad");
     const products = data.products || [];
     container.innerHTML = "";
-    products.forEach(({ name, image_url, article }, i) => new Card(name, image_url, article).render(i));
+    products.forEach(({ id, name, image_url, article }, i) => new Card(name, image_url, article, id).render(i));
     countEl.textContent = `${products.length} ${plural(products.length)}`;
     if (!products.length) container.innerHTML = `<p class="empty">У цій категорії поки порожньо. Зателефонуйте — підберемо під замовлення.</p>`;
   } catch (e) {

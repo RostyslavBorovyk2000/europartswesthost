@@ -1,0 +1,10 @@
+# Сторінки товарів: /zapchastyny/<id>-<назва> → product.php?id=<id>
+Options -Indexes
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /zapchastyny/
+  RewriteRule ^_ - [F,L]
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^([0-9]+)(-[a-z0-9-]*)?/?$ product.php?id=$1 [L,QSA]
+  RewriteRule ^$ /page-parts/parts.html [R=301,L]
+</IfModule>

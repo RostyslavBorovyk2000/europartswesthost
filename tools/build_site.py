@@ -3,7 +3,7 @@
 index.html правиться вручну. Статті блогу — blog/posts/*.md (див. blog/README.md)."""
 import sys, os, re, json, glob, datetime, html as H
 ROOT=sys.argv[1] if len(sys.argv)>1 else "."
-V="20261107j"
+V="20261107k"
 SITE="https://www.europartswest.com.ua"  # так сайт проіндексований у Google
 MAP="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d162.26824443719536!2d26.967763160480818!3d49.40338512278056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4732067d411f8ff3%3A0x9b2695110350dd7b!2sAvtozapchastyny%2C%20Mah.!5e0!3m2!1sru!2sua!4v1686254268805!5m2!1sru!2sua"
 
@@ -141,7 +141,7 @@ def footer():
         </div>
         <div>
           <span style="color:#F2EFEA;font-weight:700">м. Хмельницький, вул. Київська, 4</span>
-          <span>Пн–Пт: 8:00–17:00</span><span>Сб: 8:00–15:00</span><span>Безготівковий розрахунок</span>
+          <span>Пн–Пт: 8:00–17:00</span><span>Сб: 8:00–15:00</span>
         </div>
         <div>
           <a href="tel:+380672808384">+380 (67) 280 83 84</a>
@@ -314,7 +314,7 @@ contact=head("Контакти — Євро Партс Захід, сервіс 
         <div class="cgrid">
           <div class="ccard rv"><small>ТЕЛЕФОНИ</small><a href="tel:+380672808384">+380 (67) 280 83 84</a><span>Менеджер Юрій</span><a href="tel:+380983982533">+380 (98) 398 25 33</a><span>Директор Олександр</span></div>
           <div class="ccard rv"><small>АДРЕСА</small><b>м. Хмельницький, вул. Київська, 4</b><span>Офіс-склад. Доставка Новою поштою по всій Україні.</span></div>
-          <div class="ccard rv"><small>ГРАФІК</small><b>Пн–Пт: 8:00–17:00</b><b>Сб: 8:00–15:00</b><span>Безготівковий розрахунок</span></div>
+          <div class="ccard rv"><small>ГРАФІК</small><b>Пн–Пт: 8:00–17:00</b><b>Сб: 8:00–15:00</b></div>
         </div>
       </section>
 
@@ -519,16 +519,22 @@ if "<!-- BLOG:START -->" in home and posts:
     home=re.sub(r"<!-- BLOG:START -->.*?<!-- BLOG:END -->",lambda m:block,home,flags=re.S)
     pages_out["index.html"]=home
 
+# ---------- СТОРІНКИ ТОВАРІВ: шапка/підвал для zapchastyny/product.php ----------
+# product.php підставляє %%TITLE%%, %%META%%, %%MAIN%% — дизайн той самий, що в решти сайту.
+pages_out["zapchastyny/_layout.html"]=(head("%%TITLE%%",meta="%%META%%")+header("parts")+"<main>%%MAIN%%"
+    +ctaband("Не знайшли потрібну запчастину?","Назвіть артикул або модель техніки — підберемо оригінал чи якісний аналог і скажемо ціну.")
+    +"</main>"+footer())
+
 # ---------- sitemap.xml + robots.txt ----------
 urls=[(f"{SITE}/",today),(f"{SITE}/page-parts/parts.html",today),(f"{SITE}/page-sirvice/service.html",today),
       (f"{SITE}/page-restoration/restoration.html",today),(f"{SITE}/page-contact/contact.html",today),(f"{SITE}/blog/",posts[0]["date"] if posts else today)]
 urls+=[(f"{SITE}/blog/{p['slug']}.html",p["date"]) for p in posts]
 sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"".join(f"  <url><loc>{H.escape(u)}</loc><lastmod>{d.isoformat()}</lastmod></url>\n" for u,d in urls)+"</urlset>\n"
 pages_out["sitemap.xml"]=sm
-pages_out["robots.txt"]=f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n"
+pages_out["robots.txt"]=f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\nSitemap: {SITE}/zapchastyny/sitemap.xml\n"
 pages_out["404.html"]=p404
 pages_out.update({"page-parts/parts.html":parts,"page-sirvice/service.html":service,"page-restoration/restoration.html":restoration,"page-contact/contact.html":contact})
-os.makedirs(f"{ROOT}/blog",exist_ok=True)
+os.makedirs(f"{ROOT}/blog",exist_ok=True); os.makedirs(f"{ROOT}/zapchastyny",exist_ok=True)
 for path,html in pages_out.items():
     open(f"{ROOT}/{path}","w",encoding="utf-8").write(html)
 print("ok:", ", ".join(sorted(pages_out)))
