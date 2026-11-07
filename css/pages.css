@@ -101,3 +101,8 @@
 @media (max-width:1100px){.all-products{grid-template-columns:repeat(3,minmax(0,1fr))}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.grid5s,.cats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:minmax(0,1fr);gap:36px}}
 @media (max-width:760px){.phero{min-height:440px}.phero .h1{font-size:40px}.cgrid{grid-template-columns:minmax(0,1fr)}.ctaband{padding:32px 26px}.ctaband h2{font-size:28px}.all-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product-info{padding:14px}.product-title{font-size:14px}}
 @media (max-width:420px){.facts{grid-template-columns:minmax(0,1fr)}.cats{grid-template-columns:minmax(0,1fr)}.catx{min-height:110px}}
+
+/* Сторінка 404 */
+.e404{margin:0;font-size:clamp(110px,20vw,220px);line-height:.85;font-weight:800;letter-spacing:-.05em;background:linear-gradient(180deg,var(--g),var(--r));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 20px 60px rgba(var(--rgb),.35))}
+.linkbtn{font-family:inherit;font-size:15px;font-weight:700;background:none;border:0;padding:0;color:var(--g);cursor:pointer}
+.linkbtn:hover{filter:brightness(1.15)}
