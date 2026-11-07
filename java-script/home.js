@@ -1,5 +1,5 @@
 // Нова головна: перемикач Manitou/JCB, форма заявки на сторінці, попап.
-import { initLeadForm, postLead } from "./lead-form.js";
+import { initLeadForm, postLead } from "./lead-form.js?v=20261107";
 
 // Попап заявки (кнопка «Залишити заявку» в шапці)
 initLeadForm([".js-open-lead"]);
