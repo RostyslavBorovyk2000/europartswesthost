@@ -1,83 +1,65 @@
-import burger from "./bar-menu.js";
-import forms from "./form.js";
-import Card from "./Card-parts.js";
+// Каталог: список категорій або товари категорії (?categories=N). Дані — /catalog.php.
+// Попап заявки і кнопки «Замовити» обробляє java-script/site.js → lead-form.js.
+import Card from "./Card-parts.js?v=20261107b";
 
-// Запускаємо імпортовану функцію для БАР МЕНЮ;
-burger();
-
-// Запускаємо імпортовану функцію для ФОРМИ;
-forms();
-
-// Галерея запчастин........................................................................
-
-const getQueryParam = param => {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-};
-
-const categoriesContainer = document.querySelector(".all-products");
+const catsView = document.querySelector(".js-cats");
+const listView = document.querySelector(".block");
+const container = document.querySelector(".all-products");
 const input = document.querySelector(".input_seurch-card");
+const titleEl = document.querySelector(".cat-title");
+const countEl = document.querySelector(".cat-count");
+
+const nameById = {};
+document.querySelectorAll(".item_categoriys").forEach((a) => {
+  nameById[a.dataset.id] = a.querySelector("b")?.textContent.trim() || "";
+});
+
+const plural = (n) => {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return "позиція";
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return "позиції";
+  return "позицій";
+};
 
 const filterCards = () => {
-  const cards = document.querySelectorAll(".product");
-  const inputValue = input.value.toLowerCase().trim();
-
-  cards.forEach(card => {
-    const cardTitle = card
-      .querySelector(".product-title")
-      .textContent.toLowerCase();
-    const cardArtNumber = card
-      .querySelector(".product-price")
-      .textContent.toLowerCase();
-
-    if (cardTitle.includes(inputValue) || cardArtNumber.includes(inputValue)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
+  const q = input.value.toLowerCase().trim();
+  let shown = 0;
+  container.querySelectorAll(".product").forEach((card) => {
+    const title = card.querySelector(".product-title").textContent.toLowerCase();
+    const art = card.querySelector(".product-price").textContent.toLowerCase();
+    const ok = title.includes(q) || art.includes(q);
+    card.style.display = ok ? "" : "none";
+    if (ok) shown++;
   });
+  container.querySelector(".empty")?.remove();
+  if (!shown && q) container.insertAdjacentHTML("beforeend", `<p class="empty">Нічого не знайдено. Залиште заявку — підберемо запчастину по артикулу.</p>`);
 };
-
 input.addEventListener("input", filterCards);
 
-const categoryQueryParam = getQueryParam("categories");
-
-const showCardsByCategory = categoryQueryParam => {
-  const wrapperBlockInform = document.querySelector(".js-wrapper");
-  const mainContainer = document.querySelector(".list_categoriys");
-  const block = document.querySelector(".block");
-
-  if (categoryQueryParam) {
-    wrapperBlockInform.classList.add("hidden");
-    mainContainer.classList.add("hidden");
-    block.classList.remove("hidden");
-
-    axios
-      .get(
-        `/catalog.php?id=${encodeURIComponent(categoryQueryParam)}`
-      )
-      .then(({ data }) => {
-        if (categoryQueryParam == data.id) {
-          categoriesContainer.innerHTML = "";
-          const products = data.products;
-          products.forEach(({ name, image_url, article }) => {
-            new Card(name, image_url, article).render();
-          });
-        }
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 404) {
-          console.log("Сторінку не знайдено");
-        } else {
-          console.log("Сталася помилка при отриманні даних");
-          console.error(error);
-        }
-      });
-  } else {
-    wrapperBlockInform.classList.remove("hidden");
-    mainContainer.classList.remove("hidden");
-    block.classList.add("hidden");
+const showCategory = async (id) => {
+  catsView.classList.add("hidden");
+  listView.classList.remove("hidden");
+  titleEl.textContent = nameById[id] || "Запчастини";
+  countEl.textContent = "Завантаження…";
+  container.innerHTML = '<div class="skel"></div>'.repeat(8);
+  try {
+    const res = await fetch(`/catalog.php?id=${encodeURIComponent(id)}`);
+    const data = await res.json();
+    if (!res.ok || String(data.id) !== String(id)) throw new Error("bad");
+    const products = data.products || [];
+    container.innerHTML = "";
+    products.forEach(({ name, image_url, article }, i) => new Card(name, image_url, article).render(i));
+    countEl.textContent = `${products.length} ${plural(products.length)}`;
+    if (!products.length) container.innerHTML = `<p class="empty">У цій категорії поки порожньо. Зателефонуйте — підберемо під замовлення.</p>`;
+  } catch (e) {
+    container.innerHTML = `<p class="empty">Не вдалося завантажити каталог. Зателефонуйте нам: <a href="tel:+380672808384">+380 (67) 280 83 84</a></p>`;
+    countEl.textContent = "";
   }
 };
 
-showCardsByCategory(categoryQueryParam);
+const id = new URLSearchParams(location.search).get("categories");
+if (id) showCategory(id);
+else {
+  catsView.classList.remove("hidden");
+  listView.classList.add("hidden");
+}
