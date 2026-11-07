@@ -3,7 +3,7 @@
 index.html правиться вручну. Статті блогу — blog/posts/*.md (див. blog/README.md)."""
 import sys, os, re, json, glob, datetime, html as H
 ROOT=sys.argv[1] if len(sys.argv)>1 else "."
-V="20261107h"
+V="20261107i"
 SITE="https://europartswest.com.ua"
 MAP="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d162.26824443719536!2d26.967763160480818!3d49.40338512278056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4732067d411f8ff3%3A0x9b2695110350dd7b!2sAvtozapchastyny%2C%20Mah.!5e0!3m2!1sru!2sua!4v1686254268805!5m2!1sru!2sua"
 
@@ -398,10 +398,10 @@ def jcb_cover(p):
     # у темі JCB — жовте фото: власне cover_jcb статті або загальне
     return f"../images/blog/{p['cover_jcb']}" if p.get("cover_jcb") else "../images/home/hero-jcb.jpg"
 
-def post_card(p, prefix=""):
+def post_card(p, prefix="", img="../", cls="pcard rv"):
     tags="".join(f'<span class="tag">{H.escape(t)}</span>' for t in p["tags"])
-    return f'''<a class="pcard rv" href="{prefix}{p["slug"]}.html">
-            <span class="pcard-img"><img class="man" src="../images/blog/{p["cover"]}" alt="" loading="lazy" /><img class="jcb" src="{jcb_cover(p)}" alt="" loading="lazy" /></span>
+    return f'''<a class="{cls}" href="{prefix}{p["slug"]}.html">
+            <span class="pcard-img"><img class="man" src="{img}images/blog/{p["cover"]}" alt="" loading="lazy" /><img class="jcb" src="{jcb_cover(p).replace('../',img)}" alt="" loading="lazy" /></span>
             <span class="pcard-body"><span class="pmeta">{udate(p["date"])}{tags}</span><b>{H.escape(p["title"])}</b><span class="pdesc">{H.escape(p["description"])}</span><span class="pmore">Читати <span class="arrow">→</span></span></span>
           </a>'''
 
@@ -465,18 +465,54 @@ for idx,p in enumerate(posts):
       </article>'''+more+ctaband("Маєте питання щодо вашої техніки?","Напишіть модель і проблему — менеджер підкаже, що перевірити і що замовити.")+"</main>"+footer()
     pages_out[f"blog/{p['slug']}.html"]=html_
 
-cards="".join(post_card(p,"./") for p in posts) or '<p class="empty">Перші статті вже готуються.</p>'
+def carousel(items, prefix, img, label):
+    cards="".join(post_card(q,prefix,img,"pcard car-item") for q in items)
+    return f'''<div class="carousel" data-carousel aria-roledescription="карусель" aria-label="{label}">
+          <div class="car-track" tabindex="0">{cards}</div>
+          <div class="car-nav"><button type="button" class="car-btn" data-dir="-1" aria-label="Попередні статті">←</button><div class="car-dots" aria-hidden="true"></div><button type="button" class="car-btn" data-dir="1" aria-label="Наступні статті">→</button></div>
+        </div>'''
+
+def featured(p):
+    tags="".join(f'<span class="tag">{H.escape(t)}</span>' for t in p["tags"])
+    return f'''<a class="feat rv" href="./{p["slug"]}.html">
+          <span class="feat-img"><img class="man" src="../images/blog/{p["cover"]}" alt="{H.escape(p.get("cover_alt",""))}" /><img class="jcb" src="{jcb_cover(p)}" alt="" loading="lazy" /></span>
+          <span class="feat-body"><span class="newbadge">Нова стаття</span><span class="pmeta">{udate(p["date"])}{tags}</span><b>{H.escape(p["title"])}</b><span class="pdesc">{H.escape(p["description"])}</span><span class="btn btn-red feat-btn">Читати статтю →</span></span>
+        </a>'''
+
+if posts:
+    rest=posts[1:]
+    alist="".join(f'<li><a href="./{q["slug"]}.html"><span class="ad">{udate(q["date"])}</span><span class="at">{H.escape(q["title"])}</span><span class="ar" aria-hidden="true">→</span></a></li>' for q in posts)
+    cards=featured(posts[0])
+    if rest:
+        cards+=f'''
+        <div class="car-head rv"><div><p class="eyebrow">ЩЕ СТАТТІ</p><h2 class="h2" style="margin:0">Попередні публікації</h2></div></div>
+        {carousel(rest,"./","../","Попередні статті")}'''
+    cards+=f'''
+        <div class="alist-wrap rv"><p class="eyebrow">УСІ СТАТТІ · {len(posts)}</p><ol class="alist">{alist}</ol></div>'''
+else:
+    cards='<p class="empty">Перші статті вже готуються.</p>'
 blog_index=head("Блог — Євро Партс Захід",meta=og("Блог Євро Партс Захід","Поради з обслуговування та ремонту телескопічних навантажувачів Manitou і JCB.",f"{SITE}/blog/",f"{SITE}/images/home/hero-manitou.jpg"))+header("blog")+"<main>"+phero(
  "page-blog.jpg","Блог",words("Блог про Manitou та JCB","Manitou"),
  "Поради з обслуговування, типові несправності та запчастини для телескопічних навантажувачів — від інженерів, які щодня ремонтують цю техніку.",
  BTN_LEAD.format("Поставити питання")+CALL,"Навантажувач Manitou у корівнику")+f'''
       <section class="wrap sec">
-        <div class="pgrid">
-          {cards}
-        </div>
+        {cards}
       </section>
 '''+ctaband("Не знайшли відповіді?","Опишіть проблему — інженер підкаже, що перевірити і які запчастини знадобляться.")+"</main>"+footer()
 pages_out["blog/index.html"]=blog_index
+
+# ---------- Головна: «Свіжі статті» між маркерами <!-- BLOG:START --> … <!-- BLOG:END --> ----------
+home_path=f"{ROOT}/index.html"
+home=open(home_path,encoding="utf-8").read()
+if "<!-- BLOG:START -->" in home and posts:
+    block=f'''<!-- BLOG:START -->
+      <section class="wrap" style="padding-top:20px;padding-bottom:70px">
+        <div class="car-head rv"><div><p class="eyebrow">БЛОГ</p><h2 class="h2" style="margin:0">Свіжі статті</h2></div><a class="back" href="./blog/index.html">Усі статті →</a></div>
+        {carousel(posts[:6],"./blog/","./","Свіжі статті блогу")}
+      </section>
+      <!-- BLOG:END -->'''
+    home=re.sub(r"<!-- BLOG:START -->.*?<!-- BLOG:END -->",lambda m:block,home,flags=re.S)
+    pages_out["index.html"]=home
 
 # ---------- sitemap.xml + robots.txt ----------
 urls=[(f"{SITE}/",today),(f"{SITE}/page-parts/parts.html",today),(f"{SITE}/page-sirvice/service.html",today),

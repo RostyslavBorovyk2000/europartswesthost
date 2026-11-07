@@ -93,3 +93,44 @@ document.querySelectorAll("details.callpick, details.mnav").forEach((d) =>
     if (d.open) document.querySelectorAll("details.callpick[open], details.mnav[open]").forEach((o) => o !== d && o.removeAttribute("open"));
   })
 );
+
+// ---- Карусель статей: стрілки, крапки, свайп (свайп — нативний скрол) ----
+document.querySelectorAll("[data-carousel]").forEach((car) => {
+  const track = car.querySelector(".car-track");
+  const items = [...track.children];
+  const [prev, next] = car.querySelectorAll(".car-btn");
+  const dotsBox = car.querySelector(".car-dots");
+  if (items.length < 2) car.classList.add("single");
+  const step = () => items[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0);
+  const pages = () => Math.max(1, Math.round((track.scrollWidth - track.clientWidth) / step()) + 1);
+  let dots = [];
+  const buildDots = () => {
+    dotsBox.innerHTML = "";
+    dots = Array.from({ length: pages() }, (_, i) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "car-dot";
+      d.addEventListener("click", () => track.scrollTo({ left: i * step() }));
+      dotsBox.appendChild(d);
+      return d;
+    });
+    if (dots.length < 2) car.classList.add("single");
+    update();
+  };
+  const update = () => {
+    const max = track.scrollWidth - track.clientWidth - 2;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = track.scrollLeft >= max;
+    const i = Math.round(track.scrollLeft / step());
+    dots.forEach((d, k) => d.classList.toggle("on", k === i));
+  };
+  prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
+  next.addEventListener("click", () => track.scrollBy({ left: step() }));
+  track.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  track.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); track.scrollBy({ left: step() }); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); track.scrollBy({ left: -step() }); }
+  });
+  window.addEventListener("resize", buildDots);
+  buildDots();
+});

@@ -222,3 +222,50 @@ html,body{overflow-x:clip}
 .tag{transition:color .8s,border-color .8s}
 :root.th-j .tag{border-color:rgba(255,210,74,.45)}
 @media (max-width:900px){.cgrid{grid-template-columns:minmax(0,1fr)}}
+
+/* Блог: велика картка найновішої статті */
+.feat{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);background:#151514;border:1px solid #2a2a28;border-radius:22px;overflow:hidden;text-decoration:none;color:#F2EFEA;margin-bottom:72px;transition:border-color .3s,box-shadow .4s}
+.feat:hover{border-color:var(--r);box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 60px rgba(var(--rgb),.12);filter:none}
+.feat-img{position:relative;display:block;min-height:380px;overflow:hidden}
+.feat-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .8s}
+.feat:hover .feat-img img{transform:scale(1.05)}
+.feat-img img.jcb{opacity:0}
+:root.th-j .feat-img img.jcb{opacity:1}
+:root.th-j .feat-img img.man{opacity:0}
+.feat-body{display:flex;flex-direction:column;justify-content:center;gap:14px;padding:40px}
+.feat-body b{font-size:32px;font-weight:800;line-height:1.2;letter-spacing:-.01em}
+.feat-body .pdesc{font-size:17px;flex:0}
+.feat-btn{align-self:flex-start;margin-top:8px}
+.newbadge{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--on);background:var(--r);padding:6px 12px;border-radius:999px}
+.newbadge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse2 1.6s ease-in-out infinite}
+@keyframes pulse2{50%{opacity:.3}}
+
+/* Карусель статей */
+.car-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:28px}
+.carousel{position:relative}
+.car-track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 40px)/3);gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:6px 2px 18px;scrollbar-width:none;overscroll-behavior-x:contain}
+.car-track::-webkit-scrollbar{display:none}
+.car-track:focus-visible{outline:2px solid var(--g);outline-offset:4px;border-radius:12px}
+.car-item{scroll-snap-align:start}
+.car-item:hover{transform:translateY(-4px)}
+.car-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:10px}
+.car-btn{width:52px;height:52px;border-radius:50%;border:1px solid #3a3835;background:#151514;color:#F2EFEA;font-size:20px;cursor:pointer;transition:background .25s,border-color .25s,opacity .25s,transform .2s}
+.car-btn:hover:not(:disabled){background:var(--r);border-color:var(--r);color:var(--on);transform:scale(1.06)}
+.car-btn:disabled{opacity:.3;cursor:default}
+.car-dots{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.car-dot{width:8px;height:8px;border-radius:999px;background:#3a3835;border:0;padding:0;cursor:pointer;transition:width .3s,background .3s}
+.car-dot.on{width:28px;background:var(--r)}
+.carousel.single .car-nav{display:none}
+
+/* Повний список статей */
+.alist-wrap{margin-top:64px}
+.alist{list-style:none;margin:0;padding:0;border-top:1px solid #2a2a28}
+.alist a{display:grid;grid-template-columns:170px minmax(0,1fr) 30px;gap:20px;align-items:center;padding:18px 6px;border-bottom:1px solid #2a2a28;color:#F2EFEA;text-decoration:none;transition:background .25s,padding .25s}
+.alist a:hover{background:rgba(255,255,255,.03);padding-left:14px;filter:none}
+.alist .ad{color:#8d877e;font-size:14px;font-weight:600}
+.alist .at{font-size:18px;font-weight:700;line-height:1.35}
+.alist .ar{color:var(--g);font-size:18px;transition:transform .25s}
+.alist a:hover .ar{transform:translateX(6px)}
+
+@media (max-width:1100px){.car-track{grid-auto-columns:calc((100% - 20px)/2)}.feat{grid-template-columns:minmax(0,1fr)}.feat-img{min-height:300px}}
+@media (max-width:760px){.car-track{grid-auto-columns:86%;gap:14px}.feat-body{padding:26px}.feat-body b{font-size:24px}.feat-img{min-height:220px}.alist a{grid-template-columns:minmax(0,1fr) 24px;gap:6px 12px}.alist .ad{grid-column:1/-1}.alist .at{font-size:16px}.car-btn{width:46px;height:46px}}
