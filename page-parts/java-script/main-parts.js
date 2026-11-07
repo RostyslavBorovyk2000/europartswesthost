@@ -1,6 +1,6 @@
 // Каталог: список категорій або товари категорії (?categories=N). Дані — /catalog.php.
 // Попап заявки і кнопки «Замовити» обробляє java-script/site.js → lead-form.js.
-import Card from "./Card-parts.js?v=20261108a";
+import Card from "./Card-parts.js?v=20261108b";
 
 const catsView = document.querySelector(".js-cats");
 const listView = document.querySelector(".block");

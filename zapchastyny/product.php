@@ -102,7 +102,6 @@ $svg = function ($k) use ($ico) { return '<svg viewBox="0 0 24 24" width="22" he
               <div class="pdx-frame">
                 <div class="pdx-photo">
                   <img src="<?= ep_e($img) ?>" alt="<?= ep_e($full) ?>" width="640" height="480" />
-                  <div class="beam" aria-hidden="true"></div>
                 </div>
               </div>
               <span class="pdx-tag"><?= ep_e($brand) ?></span>

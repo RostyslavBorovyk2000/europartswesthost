@@ -55,21 +55,61 @@ function ep_url($p) {
     return '/zapchastyny/' . $p['id'] . ($slug !== '' ? '-' . $slug : '');
 }
 
-/** Усі товари: ['cats' => [id => name], 'products' => [id => [...]]] */
+/** Усі товари: ['cats' => [id => name], 'products' => [id => [...]]]
+ *  Швидко: якщо кеш є — віддаємо його одразу; застарілий кеш оновлюємо ПІСЛЯ відповіді відвідувачу. */
 function ep_catalog() {
     $cache = dirname($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/europarts-catalog-cache.json';
     $old = is_file($cache) ? json_decode((string)@file_get_contents($cache), true) : null;
-    if ($old && (time() - (int)($old['time'] ?? 0)) < EP_CACHE_TTL) return $old;
+    if ($old && !empty($old['products'])) {
+        if ((time() - (int)($old['time'] ?? 0)) >= EP_CACHE_TTL) {
+            register_shutdown_function(function () use ($cache) {
+                if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+                $lock = $cache . '.lock';
+                if (is_file($lock) && time() - filemtime($lock) < 120) return; // уже оновлює інший запит
+                @touch($lock);
+                ep_build_catalog($cache);
+                @unlink($lock);
+            });
+        }
+        return $old;
+    }
+    return ep_build_catalog($cache) ?: ['cats' => [], 'products' => []];
+}
 
+/** Паралельні запити до API (усі категорії одночасно). */
+function ep_fetch_many(array $urls) {
+    if (!function_exists('curl_multi_init')) return array_map('ep_fetch', $urls);
+    $mh = curl_multi_init(); $hs = [];
+    foreach ($urls as $k => $u) {
+        $h = curl_init($u);
+        curl_setopt_array($h, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_TIMEOUT => 15, CURLOPT_HTTPHEADER => ['Accept: application/json']]);
+        curl_multi_add_handle($mh, $h); $hs[$k] = $h;
+    }
+    do { $st = curl_multi_exec($mh, $run); if ($run) curl_multi_select($mh, 1.0); } while ($run && $st == CURLM_OK);
+    $out = [];
+    foreach ($hs as $k => $h) {
+        $code = curl_getinfo($h, CURLINFO_HTTP_CODE);
+        $out[$k] = ($code >= 200 && $code < 300) ? curl_multi_getcontent($h) : null;
+        curl_multi_remove_handle($mh, $h); curl_close($h);
+    }
+    curl_multi_close($mh);
+    return $out;
+}
+
+function ep_build_catalog($cache) {
     $list = json_decode((string)ep_fetch(EP_API . '/categories'), true);
-    if (!is_array($list)) return $old ?: ['cats' => [], 'products' => []];
+    if (!is_array($list)) return null;
     if (isset($list['data']) && is_array($list['data'])) $list = $list['data'];
 
-    $cats = []; $products = [];
+    $cats = []; $urls = [];
     foreach ($list as $c) {
         if (empty($c['id'])) continue;
         $cats[(int)$c['id']] = trim((string)($c['name'] ?? ''));
-        $full = json_decode((string)ep_fetch(EP_API . '/categories/' . (int)$c['id']), true);
+        $urls[(int)$c['id']] = EP_API . '/categories/' . (int)$c['id'];
+    }
+    $products = [];
+    foreach (ep_fetch_many($urls) as $cid => $body) {
+        $full = json_decode((string)$body, true);
         if (!is_array($full) || empty($full['products'])) continue;
         foreach ($full['products'] as $p) {
             if (empty($p['id']) || trim((string)($p['name'] ?? '')) === '') continue;
@@ -77,7 +117,7 @@ function ep_catalog() {
                 'id'       => (int)$p['id'],
                 'name'     => trim((string)$p['name']),
                 'article'  => trim((string)($p['article'] ?? '')),
-                'cat'      => (int)$c['id'],
+                'cat'      => (int)$cid,
                 'img'      => ep_img($p['image_url'] ?? ($p['image'] ?? '')),
                 'updated'  => substr((string)($p['updated_at'] ?? ''), 0, 10),
                 'brand'    => trim((string)($p['brand'] ?? '')),
@@ -85,9 +125,10 @@ function ep_catalog() {
             ];
         }
     }
-    if (!$products && $old) return $old;
+    if (!$products) return null;
     $data = ['time' => time(), 'cats' => $cats, 'products' => $products];
-    @file_put_contents($cache, json_encode($data, JSON_UNESCAPED_UNICODE), LOCK_EX);
+    @file_put_contents($cache . '.tmp', json_encode($data, JSON_UNESCAPED_UNICODE), LOCK_EX);
+    @rename($cache . '.tmp', $cache);
     return $data;
 }
 

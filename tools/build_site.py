@@ -3,7 +3,7 @@
 index.html правиться вручну. Статті блогу — blog/posts/*.md (див. blog/README.md)."""
 import sys, os, re, json, glob, datetime, html as H
 ROOT=sys.argv[1] if len(sys.argv)>1 else "."
-V="20261108a"
+V="20261108b"
 SITE="https://www.europartswest.com.ua"  # так сайт проіндексований у Google
 MAP="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d162.26824443719536!2d26.967763160480818!3d49.40338512278056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4732067d411f8ff3%3A0x9b2695110350dd7b!2sAvtozapchastyny%2C%20Mah.!5e0!3m2!1sru!2sua!4v1686254268805!5m2!1sru!2sua"
 

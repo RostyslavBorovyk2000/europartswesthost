@@ -1,5 +1,5 @@
 // Спільне для всіх сторінок: перемикач Manitou/JCB, попап заявки, форма заявки на сторінці (#lead-inline).
-import { initLeadForm, postLead } from "./lead-form.js?v=20261108a";
+import { initLeadForm, postLead } from "./lead-form.js?v=20261108b";
 
 // Попап заявки (кнопка «Залишити заявку» в шапці)
 initLeadForm([".js-open-lead"]);
