@@ -80,6 +80,8 @@ function ep_catalog() {
                 'cat'      => (int)$c['id'],
                 'img'      => ep_img($p['image_url'] ?? ($p['image'] ?? '')),
                 'updated'  => substr((string)($p['updated_at'] ?? ''), 0, 10),
+                'brand'    => trim((string)($p['brand'] ?? '')),
+                'desc'     => trim((string)($p['description'] ?? '')),
             ];
         }
     }

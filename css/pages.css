@@ -335,3 +335,4 @@ a.pimg{display:flex}
   .pdx-bar .callpick-menu{left:auto;right:0}
   body:has(.pdx-bar) .foot{padding-bottom:80px}
 }
+.pdx-desc{color:#cfcac2;font-size:15px;line-height:1.65;margin:0 0 18px;padding-left:16px;border-left:3px solid var(--r)}

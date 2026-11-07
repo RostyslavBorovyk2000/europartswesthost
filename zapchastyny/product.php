@@ -25,13 +25,25 @@ if (rawurldecode($reqPath) !== $canon) {
 
 $cat = $data['cats'][$p['cat']] ?? 'Запчастини';
 $hay = $p['name'] . ' ' . $p['article'];
-$brand = stripos($hay, 'jcb') !== false ? 'JCB' : (preg_match('/manitou|маніту/iu', $hay) ? 'Manitou' : 'Manitou / JCB');
+// Марка: з адмінки (поле «Марка»), інакше — з назви товару
+$brandField = $p['brand'] ?? '';
+if ($brandField === 'Manitou' || $brandField === 'JCB') $brand = $brandField;
+elseif ($brandField !== '') $brand = 'Manitou / JCB';
+else $brand = stripos($hay, 'jcb') !== false ? 'JCB' : (preg_match('/manitou|маніту/iu', $hay) ? 'Manitou' : 'Manitou / JCB');
+$pdesc = $p['desc'] ?? '';
 $art = $p['article'];
 $full = $p['name'] . ($art !== '' ? ', арт. ' . $art : '');
 
-$title = $p['name'] . ($art !== '' ? ' ' . $art : '') . ' — ' . ($brand === 'Manitou / JCB' ? 'запчастини Маніту, JCB' : 'запчастина ' . $brand) . ' | Євро Партс Захід';
-$desc = $p['name'] . ($art !== '' ? ', артикул ' . $art : '') . ' — запчастина для телескопічних навантажувачів Маніту (Manitou) та JCB. '
-      . 'Розділ: ' . $cat . '. Ціна та наявність — за телефоном. Хмельницький, доставка по Україні.';
+$title = $p['name'] . ($art !== '' ? ' ' . $art : '') . ' — ' . ($brand === 'Manitou / JCB' ? 'запчастини Маніту, JCB' : ($brand === 'Manitou' ? 'запчастина Маніту (Manitou)' : 'запчастина JCB')) . ' | Євро Партс Захід';
+$brandText = $brand === 'Manitou' ? 'Маніту (Manitou)' : ($brand === 'JCB' ? 'JCB' : 'Маніту (Manitou) та JCB');
+if ($pdesc !== '') {
+    $short = preg_replace('/\s+/u', ' ', $pdesc);
+    if (mb_strlen($short, 'UTF-8') > 120) $short = rtrim(mb_substr($short, 0, 117, 'UTF-8')) . '…';
+    $desc = $p['name'] . ($art !== '' ? ' ' . $art : '') . ': ' . $short . ' Хмельницький, доставка по Україні.';
+} else {
+    $desc = $p['name'] . ($art !== '' ? ', артикул ' . $art : '') . ' — запчастина для телескопічних навантажувачів ' . $brandText . '. '
+          . 'Розділ: ' . $cat . '. Ціна та наявність — за телефоном. Хмельницький, доставка по Україні.';
+}
 
 // Інші товари цієї категорії
 $others = array_values(array_filter($data['products'], function ($o) use ($p) { return $o['cat'] === $p['cat'] && $o['id'] !== $p['id']; }));
@@ -105,6 +117,7 @@ $svg = function ($k) use ($ico) { return '<svg viewBox="0 0 24 24" width="22" he
                 <button type="button" class="pd-copy" data-copy="<?= ep_e($art) ?>" aria-label="Скопіювати артикул">Копіювати</button>
               </div>
               <?php endif; ?>
+              <?php if ($pdesc !== ''): ?><div class="pdx-desc"><?= nl2br(ep_e($pdesc)) ?></div><?php endif; ?>
               <div class="pdx-price">
                 <div>
                   <b>Ціна та наявність — за запитом</b>
