@@ -74,8 +74,10 @@ $rewrite = function ($url) {
     }
     return '/catalog.php?img=' . rawurlencode($p['path'] ?? '');
 };
+require_once __DIR__ . '/catalog-names.php';
 array_walk_recursive($data, function (&$v, $k) use ($rewrite) {
     if (in_array($k, ['image_url', 'image', 'img'], true)) $v = $rewrite($v);
+    if (in_array($k, ['name', 'description'], true)) $v = ep_uk_name($v);
 });
 
 echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

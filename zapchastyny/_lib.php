@@ -9,6 +9,7 @@ const EP_SITE = 'https://www.europartswest.com.ua';
 const EP_API_HOST = 'api.europartswest.com.ua';
 const EP_API = 'http://api.europartswest.com.ua/public/api';
 const EP_CACHE_TTL = 3600;
+require_once __DIR__ . '/../catalog-names.php';
 
 function ep_fetch($url) {
     if (function_exists('curl_init')) {
@@ -58,7 +59,7 @@ function ep_url($p) {
 /** Усі товари: ['cats' => [id => name], 'products' => [id => [...]]]
  *  Швидко: якщо кеш є — віддаємо його одразу; застарілий кеш оновлюємо ПІСЛЯ відповіді відвідувачу. */
 function ep_catalog() {
-    $cache = dirname($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/europarts-catalog-cache.json';
+    $cache = dirname($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/europarts-catalog-cache-v2.json';
     $old = is_file($cache) ? json_decode((string)@file_get_contents($cache), true) : null;
     if ($old && !empty($old['products'])) {
         if ((time() - (int)($old['time'] ?? 0)) >= EP_CACHE_TTL) {
@@ -104,7 +105,7 @@ function ep_build_catalog($cache) {
     $cats = []; $urls = [];
     foreach ($list as $c) {
         if (empty($c['id'])) continue;
-        $cats[(int)$c['id']] = trim((string)($c['name'] ?? ''));
+        $cats[(int)$c['id']] = ep_uk_name(trim((string)($c['name'] ?? '')));
         $urls[(int)$c['id']] = EP_API . '/categories/' . (int)$c['id'];
     }
     $products = [];
@@ -115,13 +116,13 @@ function ep_build_catalog($cache) {
             if (empty($p['id']) || trim((string)($p['name'] ?? '')) === '') continue;
             $products[(int)$p['id']] = [
                 'id'       => (int)$p['id'],
-                'name'     => trim((string)$p['name']),
+                'name'     => ep_uk_name(trim((string)$p['name'])),
                 'article'  => trim((string)($p['article'] ?? '')),
                 'cat'      => (int)$cid,
                 'img'      => ep_img($p['image_url'] ?? ($p['image'] ?? '')),
                 'updated'  => substr((string)($p['updated_at'] ?? ''), 0, 10),
                 'brand'    => trim((string)($p['brand'] ?? '')),
-                'desc'     => trim((string)($p['description'] ?? '')),
+                'desc'     => ep_uk_name(trim((string)($p['description'] ?? ''))),
             ];
         }
     }
