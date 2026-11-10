@@ -1,6 +1,6 @@
 // Каталог: список категорій або товари категорії (?categories=N). Дані — /catalog.php.
 // Попап заявки і кнопки «Замовити» обробляє java-script/site.js → lead-form.js.
-import Card from "./Card-parts.js?v=20261108b";
+import Card from "./Card-parts.js?v=20261110a";
 
 const catsView = document.querySelector(".js-cats");
 const listView = document.querySelector(".block");
@@ -32,7 +32,7 @@ const filterCards = () => {
     if (ok) shown++;
   });
   container.querySelector(".empty")?.remove();
-  if (!shown && q) container.insertAdjacentHTML("beforeend", `<p class="empty">Нічого не знайдено. Залиште заявку — підберемо запчастину по артикулу.</p>`);
+  if (!shown && q) container.insertAdjacentHTML("beforeend", `<p class="empty">Нічого не знайдено. Залиште заявку — підберемо запчастину за артикулом.</p>`);
 };
 input.addEventListener("input", filterCards);
 
