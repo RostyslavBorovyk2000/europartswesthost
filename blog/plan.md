@@ -11,7 +11,7 @@
 | 3 | Які фільтри міняти на JCB 531-70 і 535-95 і як часто? | JCB | фільтри jcb 535-95, ТО jcb loadall | to, engine, hydraulic | опубліковано 2026-11-07 → blog/filtry-jcb-531-70-535-95.html |
 | 4 | Чому стріла телескопічного навантажувача опускається сама? | Manitou, JCB | стріла опускається, тече гідроциліндр | hydraulic, boom, restoration | опубліковано 2026-11-10 → blog/chomu-strila-opuskaietsia-sama.html |
 | 5 | Чому КПП Manitou не перемикає передачі або смикається? | Manitou | кпп manitou ремонт, не їде вперед | kpp, service | опубліковано 2026-11-17 → blog/kpp-manitou-ne-peremykaie.html |
-| 6 | Що вигідніше: ремонт гідроциліндра чи новий? | Manitou, JCB | ремонт гідроциліндра навантажувача | restoration, hydraulic | чекає |
+| 6 | Що вигідніше: ремонт гідроциліндра чи новий? | Manitou, JCB | ремонт гідроциліндра навантажувача | restoration, hydraulic | опубліковано 2026-11-24 → blog/remont-gidrotsylindra-chy-novyi.html |
 | 7 | Чому тече міст на JCB Loadall і як це виправити? | JCB | міст jcb тече, ремонт моста jcb | axle, reducer, service | чекає |
 | 8 | Оригінальні чи неоригінальні запчастини для Manitou і JCB: що краще? | Manitou, JCB | запчастини manitou оригінал аналог | to, other | чекає |
 | 9 | Що означають попередження на панелі Manitou і коли зупинятись? | Manitou | помилки manitou, діагностика manitou | electric, service | чекає |
